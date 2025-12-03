@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión E-commerce</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-box-seam"></i> Sistema E-commerce</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#" onclick="mostrarSeccion('seccion-ventas')"><i class="bi bi-cart-plus"></i> Nueva Venta</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="mostrarSeccion('seccion-clientes')"><i class="bi bi-person-plus"></i> Nuevo Cliente</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="mostrarSeccion('seccion-pedidos')"><i class="bi bi-list-check"></i> Historial Pedidos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="mostrarSeccion('seccion-dashboard')"><i class="bi bi-graph-up"></i> Dashboard</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div id="alerta-global"></div>
+
+        <section id="seccion-ventas" class="seccion-app">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0 text-primary"><i class="bi bi-cart"></i> Registrar Venta</h4>
+                </div>
+                <div class="card-body">
+                    <form id="formVenta">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" id="fecha" class="form-control" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Cliente</label>
+                                <select id="venta-cliente" class="form-select" required>
+                                    <option value="">Cargando...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Método de Pago</label>
+                                <select id="metodoPago" class="form-select" required>
+                                    <option value="Efectivo">Efectivo</option>
+                                    <option value="Tarjeta">Tarjeta</option>
+                                    <option value="Transferencia">Transferencia</option>
+                                </select>
+                            </div>
+                            
+                            <hr class="my-4">
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Producto</label>
+                                <select id="venta-producto" class="form-select" required>
+                                    <option value="">Cargando...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Precio Unitario</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" id="precioUnitario" class="form-control bg-light" readonly required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" id="cantidad" class="form-control" min="1" value="1" required>
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Total Estimado:</h5>
+                                    <h3 class="mb-0 fw-bold text-success" id="totalVenta">$0.00</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                            <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-save"></i> Confirmar Venta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="seccion-clientes" class="seccion-app d-none">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0 text-success"><i class="bi bi-person-add"></i> Registrar Cliente</h4>
+                </div>
+                <div class="card-body">
+                    <form id="formCliente">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" id="cli-nombre" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="cli-email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dirección / Zona</label>
+                            <input type="text" id="cli-direccion" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Guardar Cliente</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="seccion-pedidos" class="seccion-app d-none">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0 text-secondary"><i class="bi bi-list-ul"></i> Historial de Pedidos</h4>
+                    <button class="btn btn-sm btn-outline-primary" onclick="cargarDatosApp()"><i class="bi bi-arrow-clockwise"></i> Recargar</button>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Total</th>
+                                    <th>Estado/Pago</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-pedidos-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="seccion-dashboard" class="seccion-app d-none">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Promedio Diario</h5>
+                            <h2 id="stat-promedio">Cargando...</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Desviación Estándar</h5>
+                            <h2 id="stat-desvio">Cargando...</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Correlación (Precio/Cant)</h5>
+                            <h2 id="stat-corr">Cargando...</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">Ventas por Producto (Barras)</div>
+                        <div class="card-body"><canvas id="chartProductos"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">Evolución de Ventas (Líneas)</div>
+                        <div class="card-body"><canvas id="chartFechas"></canvas></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">Correlación: Precio vs Cantidad (Dispersión)</div>
+                        <div class="card-body"><canvas id="chartDispersion"></canvas></div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header">Métodos de Pago (Torta)</div>
+                        <div class="card-body"><canvas id="chartMetodosPago"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="modal fade" id="modalDetalle" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalle del Pedido #<span id="modal-pedido-id"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm">
+                        <thead><tr><th>Producto</th><th>Precio Unit.</th><th>Cant.</th><th>Subtotal</th></tr></thead>
+                        <tbody id="modal-detalle-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="app.js"></script>
+    <script src="formulario.js"></script>
+    <script src="pedidos.js"></script>
+    <script src="dashboard.js"></script>
+
+    <script>
+        function mostrarSeccion(id) {
+            document.querySelectorAll('.seccion-app').forEach(el => el.classList.add('d-none'));
+            
+                        document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            
+            
+            document.getElementById(id).classList.remove('d-none');
+            
+            
+            event.target.classList.add('active');
+            
+            
+            if(id === 'seccion-dashboard') actualizarDashboard();
+            if(id === 'seccion-pedidos') renderizarTablaPedidos();
+        }
+    </script>
+</body>
+</html>
+
